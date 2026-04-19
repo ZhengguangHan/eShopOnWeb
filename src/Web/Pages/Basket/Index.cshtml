@@ -67,6 +67,11 @@
                     </section>
                     <section class="esh-basket-item col-xs-push-7 col-xs-4">
 
+                        <button class="btn esh-basket-checkout" type="submit"
+                                asp-page-handler="Empty"
+                                onclick="return confirm('Are you sure you want to clear your cart?');">
+                            [ Clear Cart ]
+                        </button>
                         <button class="btn esh-basket-checkout" name="updatebutton" value="" type="submit"
                                 asp-page-handler="Update">
                             [ Update ]
@@ -74,16 +79,6 @@
                         <a asp-page="./Checkout" class="btn esh-basket-checkout">[ Checkout ]</a>
                     </section>
                 </div>
-            </div>
-        </form>
-        <form method="post" asp-page-handler="Empty"
-              onsubmit="return confirm('Are you sure you want to clear your cart?');">
-            <div class="row">
-                <section class="esh-basket-item col-xs-push-7 col-xs-4">
-                    <button class="btn esh-basket-checkout" type="submit">
-                        [ Clear Cart ]
-                    </button>
-                </section>
             </div>
         </form>
     }
