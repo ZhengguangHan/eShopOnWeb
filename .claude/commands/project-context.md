@@ -144,6 +144,46 @@ Present findings for user review, then save the completed project context to
 - [e.g., Payment gateway API — docs at URL]
 - [e.g., Message queue — RabbitMQ / Azure Service Bus]
 - [e.g., Third-party auth — OAuth2 / OIDC provider]
+
+---
+
+## Available Agents
+
+Located in `agents/`:
+
+| Agent | Purpose | When to Use |
+|-------|---------|-------------|
+| **planner** | Implementation planning | Complex features, multi-file changes |
+| **tdd** | Test-driven development | New features, bug fixes — write tests FIRST |
+| **code-reviewer** | Code review | After writing or modifying ANY code |
+
+## Core Workflow
+
+### New Feature Development
+
+```
+planner → tdd → code-reviewer
+```
+
+1. **planner**: Break down feature into implementation steps
+2. **tdd**: Write failing tests → implement → refactor (Red-Green-Refactor)
+3. **code-reviewer**: Review all code changes for quality and security
+
+### Bug Fix
+
+```
+tdd → code-reviewer
+```
+
+1. **tdd**: Write a test that reproduces the bug (MUST fail), then fix
+2. **code-reviewer**: Review the fix for regressions
+
+## Rules
+
+1. **Tests before code** — tdd agent ensures Red-Green-Refactor
+2. **Review after code** — code-reviewer catches issues before commit
+3. **Build verification** — build must pass after every change
+4. **Plan update** — Update the active file in `docs/plans/` after each implementation batch
 ```
 
 ## When to Stop and Ask
