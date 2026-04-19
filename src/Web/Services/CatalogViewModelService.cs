@@ -32,13 +32,13 @@ public class CatalogViewModelService : ICatalogViewModelService
         _uriComposer = uriComposer;
     }
 
-    public async Task<CatalogIndexViewModel> GetCatalogItems(int pageIndex, int itemsPage, int? brandId, int? typeId)
+    public async Task<CatalogIndexViewModel> GetCatalogItems(int pageIndex, int itemsPage, int? brandId, int? typeId, CatalogSortOption? sortOption = null)
     {
         _logger.LogInformation("GetCatalogItems called.");
 
         var filterSpecification = new CatalogFilterSpecification(brandId, typeId);
         var filterPaginatedSpecification =
-            new CatalogFilterPaginatedSpecification(itemsPage * pageIndex, itemsPage, brandId, typeId);
+            new CatalogFilterPaginatedSpecification(itemsPage * pageIndex, itemsPage, brandId, typeId, sortOption);
 
         // the implementation below using ForEach and Count. We need a List.
         var itemsOnPage = await _itemRepository.ListAsync(filterPaginatedSpecification);
@@ -55,8 +55,10 @@ public class CatalogViewModelService : ICatalogViewModelService
             }).ToList(),
             Brands = (await GetBrands()).ToList(),
             Types = (await GetTypes()).ToList(),
+            Sorts = GetSortOptions().ToList(),
             BrandFilterApplied = brandId ?? 0,
             TypesFilterApplied = typeId ?? 0,
+            SortApplied = sortOption,
             PaginationInfo = new PaginationInfoViewModel()
             {
                 ActualPage = pageIndex,
@@ -102,5 +104,16 @@ public class CatalogViewModelService : ICatalogViewModelService
         items.Insert(0, allItem);
 
         return items;
+    }
+
+    public IEnumerable<SelectListItem> GetSortOptions()
+    {
+        return new List<SelectListItem>
+        {
+            new() { Value = string.Empty, Text = "Sort by", Selected = true },
+            new() { Value = nameof(CatalogSortOption.PriceAsc), Text = "Price: Low to High" },
+            new() { Value = nameof(CatalogSortOption.PriceDesc), Text = "Price: High to Low" },
+            new() { Value = nameof(CatalogSortOption.NameAsc), Text = "Name: A-Z" }
+        };
     }
 }

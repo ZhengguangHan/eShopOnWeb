@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.eShopWeb.ApplicationCore.Specifications;
 using Microsoft.eShopWeb.Web.Services;
 using Microsoft.eShopWeb.Web.ViewModels;
 
@@ -17,6 +18,18 @@ public class IndexModel : PageModel
 
     public async Task OnGet(CatalogIndexViewModel catalogModel, int? pageId)
     {
-        CatalogModel = await _catalogViewModelService.GetCatalogItems(pageId ?? 0, Constants.ITEMS_PER_PAGE, catalogModel.BrandFilterApplied, catalogModel.TypesFilterApplied);
+        // Untrusted input: reject out-of-range enum values so they don't reach the
+        // cache key or the query. Numeric values outside the defined set bind
+        // successfully but would otherwise silently skip sorting and pollute cache.
+        var sortApplied = catalogModel.SortApplied is { } value && Enum.IsDefined(value)
+            ? catalogModel.SortApplied
+            : null;
+
+        CatalogModel = await _catalogViewModelService.GetCatalogItems(
+            pageId ?? 0,
+            Constants.ITEMS_PER_PAGE,
+            catalogModel.BrandFilterApplied,
+            catalogModel.TypesFilterApplied,
+            sortApplied);
     }
 }

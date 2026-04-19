@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.eShopWeb.ApplicationCore.Specifications;
 using Microsoft.eShopWeb.Web.Extensions;
 using Microsoft.eShopWeb.Web.ViewModels;
 using Microsoft.Extensions.Caching.Memory;
@@ -26,14 +27,14 @@ public class CachedCatalogViewModelService : ICatalogViewModelService
                 })) ?? new List<SelectListItem>();
     }
 
-    public async Task<CatalogIndexViewModel> GetCatalogItems(int pageIndex, int itemsPage, int? brandId, int? typeId)
+    public async Task<CatalogIndexViewModel> GetCatalogItems(int pageIndex, int itemsPage, int? brandId, int? typeId, CatalogSortOption? sortOption = null)
     {
-        var cacheKey = CacheHelpers.GenerateCatalogItemCacheKey(pageIndex, Constants.ITEMS_PER_PAGE, brandId, typeId);
+        var cacheKey = CacheHelpers.GenerateCatalogItemCacheKey(pageIndex, Constants.ITEMS_PER_PAGE, brandId, typeId, sortOption);
 
         return (await _cache.GetOrCreateAsync(cacheKey, async entry =>
         {
             entry.SlidingExpiration = CacheHelpers.DefaultCacheDuration;
-            return await _catalogViewModelService.GetCatalogItems(pageIndex, itemsPage, brandId, typeId);
+            return await _catalogViewModelService.GetCatalogItems(pageIndex, itemsPage, brandId, typeId, sortOption);
         })) ?? new CatalogIndexViewModel();
     }
 
@@ -45,4 +46,6 @@ public class CachedCatalogViewModelService : ICatalogViewModelService
             return await _catalogViewModelService.GetTypes();
         })) ?? new List<SelectListItem>();
     }
+
+    public IEnumerable<SelectListItem> GetSortOptions() => _catalogViewModelService.GetSortOptions();
 }
