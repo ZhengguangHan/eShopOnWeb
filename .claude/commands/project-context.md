@@ -1,4 +1,4 @@
-# Init — Project Context Discovery
+# Project Context — Discover & Save
 
 ## Overview
 
