@@ -90,3 +90,14 @@ Feature: Basket Web Pages
     Then the basket page should show "Basket is empty"
     And the basket page should not show ".NET Black &amp; White Mug"
     And the basket page should not show "Prism White T-Shirt"
+
+  Scenario: Clear Cart button appears when the basket has items
+    Given the shopper has loaded the home page
+    And the shopper added catalog item "2" named "shirt" to the basket
+    Then the basket page should show "Clear Cart"
+    And the basket page should show "return confirm("
+
+  Scenario: Clear Cart button is not shown for an empty basket
+    When the shopper visits "/Basket/Index"
+    Then the basket page should show "Basket is empty"
+    And the basket page should not show "Clear Cart"
