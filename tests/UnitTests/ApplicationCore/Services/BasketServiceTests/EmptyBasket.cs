@@ -41,4 +41,17 @@ public class EmptyBasket
 
         await _mockBasketRepo.Received(1).UpdateAsync(basket, Arg.Any<CancellationToken>());
     }
+
+    [Fact]
+    public async Task ReturnsNotFoundWhenBasketMissing()
+    {
+        _mockBasketRepo.FirstOrDefaultAsync(Arg.Any<BasketWithItemsSpecification>(), Arg.Any<CancellationToken>())
+            .Returns((Basket?)null);
+        var basketService = new BasketService(_mockBasketRepo, _mockLogger);
+
+        var result = await basketService.EmptyBasketAsync(999);
+
+        Assert.Equal(Ardalis.Result.ResultStatus.NotFound, result.Status);
+        await _mockBasketRepo.DidNotReceive().UpdateAsync(Arg.Any<Basket>(), Arg.Any<CancellationToken>());
+    }
 }
