@@ -14,7 +14,7 @@ before the final report.
 1. **Invoke Research Skill**
   - Read the skill file at `skills/research/SKILL.md`
     - Follow the skill workflow exactly:
-      - **Step 1**: Context Analysis — audit codebase, read `AGENTS.md`, review git history
+      - **Step 1**: Context Analysis — audit codebase, read `CLAUDE.md`, review git history
       - **Step 2**: Logic Mapping — trace data flow across layers, map dependencies
       - **Step 3**: Identify Unknowns — list every gap (files, config, requirements, DB, permissions); **use `AskUserQuestion`** as gaps appear when user input is required
       - **Step 4**: Clarify and Report — present structured research report; **use `AskUserQuestion`** for any remaining unknowns, then **STOP** and wait if anything is still unanswered
@@ -39,7 +39,7 @@ before the final report.
 ## Checklist
 
 - [ ] Research skill loaded and followed
-- [ ] `AGENTS.md` project context reviewed
+- [ ] `CLAUDE.md` project context reviewed
 - [ ] Relevant files and modules identified with paths
 - [ ] Data flow traced across layers
 - [ ] Unknowns explicitly listed

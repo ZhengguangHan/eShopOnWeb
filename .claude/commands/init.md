@@ -5,7 +5,7 @@
 Explore the current project and automatically discover its tech stack, coding
 conventions, architecture patterns, testing strategy, and domain context.
 Present findings for user review, then save the completed project context to
-`AGENTS.md`.
+`CLAUDE.md`.
 
 ## Steps
 
@@ -71,11 +71,11 @@ Present findings for user review, then save the completed project context to
     - Ask: "Does this accurately capture your project? Any corrections or additions?"
     - Wait for user confirmation or corrections
 
-9. **Save to AGENTS.md**
-  - After user confirms, append or update the "Project Context" section in `AGENTS.md`
-    - If `AGENTS.md` already has a "Project Context" section, replace it
-    - If `AGENTS.md` does not exist, create it with the project context as the first section
-    - Preserve any existing content in `AGENTS.md` (agent definitions, workflows, etc.)
+9. **Save to CLAUDE.md**
+  - After user confirms, append or update the "Project Context" section in `CLAUDE.md` at the project root
+    - If `CLAUDE.md` already has a "Project Context" section, replace it
+    - If `CLAUDE.md` does not exist, create it with the project context as the first section
+    - Preserve any existing content in `CLAUDE.md` (agent definitions, workflows, etc.)
 
 ## Project Context Template
 
@@ -130,7 +130,7 @@ Present findings for user review, then save the completed project context to
 4. When finding a bug, first write a test that reproduces the bug, then
    iterate continuously until the test passes.
 5. Every time the user corrects a mistake, add a new rule to this
-   `AGENTS.md` file so the situation does not happen again.
+   `CLAUDE.md` file so the situation does not happen again.
 
 ## Domain Context
 [Domain-specific terminology, business rules, or concepts the AI needs to understand]
@@ -177,5 +177,5 @@ Stop and ask the user when:
 
 ### Save
 
-- [ ] Project context saved to `AGENTS.md`
-- [ ] Existing `AGENTS.md` content preserved
+- [ ] Project context saved to `CLAUDE.md`
+- [ ] Existing `CLAUDE.md` content preserved

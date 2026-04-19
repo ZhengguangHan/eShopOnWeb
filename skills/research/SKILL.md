@@ -18,7 +18,7 @@ Read-only codebase research for a feature or change request. Explore, map, ident
 
 ### Step 1: Context Analysis (Codebase Audit)
 
-1. Read `AGENTS.md` for project context (tech stack, conventions, architecture)
+1. Read `CLAUDE.md` for project context (tech stack, conventions, architecture)
 2. Explore the workspace structure relevant to the feature:
    - Identify related source files, modules, and namespaces
    - Search for existing implementations of similar features
@@ -62,7 +62,7 @@ Explicitly list every gap found during research. **As you surface gaps, use `Ask
 ## Research Report: [Feature Name]
 
 ### 1. Project Context
-- Tech stack: [from AGENTS.md or detected]
+- Tech stack: [from CLAUDE.md or detected]
 - Relevant area: [module/namespace/layer]
 
 ### 2. Related Files
