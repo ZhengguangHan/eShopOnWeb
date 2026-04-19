@@ -17,16 +17,16 @@ public class CheckoutTest
     [TestMethod]
     public async Task SucessfullyPay()
     {
-        var home = await _client.GetAsync("/");
-        home.EnsureSuccessStatusCode();
-        var homeBody = await home.Content.ReadAsStringAsync();
+        var detail = await _client.GetAsync("/Catalog/2");
+        detail.EnsureSuccessStatusCode();
+        var detailBody = await detail.Content.ReadAsStringAsync();
 
         var addForm = new FormUrlEncodedContent(new[]
         {
             new KeyValuePair<string, string>("id", "2"),
             new KeyValuePair<string, string>("name", "shirt"),
             new KeyValuePair<string, string>("price", "19.49"),
-            new KeyValuePair<string, string>(WebPageHelpers.TokenTag, WebPageHelpers.GetRequestVerificationToken(homeBody))
+            new KeyValuePair<string, string>(WebPageHelpers.TokenTag, WebPageHelpers.GetRequestVerificationToken(detailBody))
         });
         var add = await _client.PostAsync("/basket/index", addForm);
         add.EnsureSuccessStatusCode();

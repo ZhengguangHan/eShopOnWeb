@@ -1,0 +1,27 @@
+@page "/Catalog/{id:int}"
+@model Microsoft.eShopWeb.Web.Pages.Catalog.DetailModel
+@{
+    ViewData["Title"] = Model.Item.Name ?? "Product";
+}
+
+<section class="esh-catalog-detail container">
+    <div class="row">
+        <div class="col-md-5">
+            <img class="esh-catalog-detail-image" src="@Model.Item.PictureUri" alt="@Model.Item.Name" />
+        </div>
+        <div class="col-md-7">
+            <h1 class="esh-catalog-detail-name">@Model.Item.Name</h1>
+            <div class="esh-catalog-detail-price">
+                <span>@Model.Item.Price.ToString("N2")</span>
+            </div>
+            <div class="esh-catalog-description">
+                <p>@Model.Item.Description</p>
+            </div>
+            <form asp-page="/Basket/Index" method="post">
+                <input type="hidden" name="id" value="@Model.Item.Id" />
+                <button class="esh-catalog-button" type="submit">Add to Basket</button>
+            </form>
+            <p><a asp-page="/Index">Back to catalog</a></p>
+        </div>
+    </div>
+</section>

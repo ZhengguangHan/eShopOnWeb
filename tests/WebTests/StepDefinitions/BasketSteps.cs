@@ -18,7 +18,11 @@ public class BasketSteps(WebContext context)
     [When("the shopper adds catalog item {string} named {string} to the basket")]
     public async Task AddItemToBasket(string id, string name)
     {
-        var token = WebPageHelpers.GetRequestVerificationToken(context.LastBody);
+        var detailResponse = await context.Client.GetAsync($"/Catalog/{id}");
+        detailResponse.EnsureSuccessStatusCode();
+        var detailBody = await detailResponse.Content.ReadAsStringAsync();
+
+        var token = WebPageHelpers.GetRequestVerificationToken(detailBody);
         var content = new FormUrlEncodedContent(new[]
         {
             new KeyValuePair<string, string>("id", id),

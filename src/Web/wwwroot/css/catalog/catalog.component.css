@@ -83,6 +83,15 @@
   max-width: 370px;
   width: 100%; }
 
+.esh-catalog-link {
+  color: inherit;
+  display: block;
+  text-decoration: none; }
+  .esh-catalog-link:hover,
+  .esh-catalog-link:focus {
+    color: inherit;
+    text-decoration: none; }
+
 .esh-catalog-button {
   background-color: #83D01B;
   border: 0;

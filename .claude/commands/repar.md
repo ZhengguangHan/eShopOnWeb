@@ -3,11 +3,15 @@
 ## Overview
 
 Invoke the full spec-driven development workflow in any mode. It follows the
-spec-driven-development skill end-to-end: research, business specification,
+spec-driven-development skill end-to-end: research, plan & specification,
 mandatory plan file creation at `docs/plans/YYYY-MM-DD-{summary}.md`, where
 `{summary}` is a kebab-case summary, complexity assessment, path selection
 (E2E or Simplified TDD), and implementation through to verification. The
 workflow must still write the plan file before moving on to implementation.
+
+**Context management**: After Phase 2 (plan file saved), run `/compact` to
+compress the conversation before starting implementation. The plan file on
+disk is the source of truth — the implementation phase reads it fresh.
 
 ## Steps
 
@@ -16,18 +20,25 @@ workflow must still write the plan file before moving on to implementation.
     - Commands may run in any mode
     - Proceed as long as Phase 2 will create and save the plan file to
       `docs/plans/YYYY-MM-DD-{summary}.md` using a kebab-case `{summary}`
-2. **Invoke Spec-Driven Development Skill**
+2. **Invoke Spec-Driven Development Skill (Phases 1–2)**
   - Read the skill file at `skills/spec-driven-development/SKILL.md`
-    - Follow the entire skill workflow from start to finish:
-      - **Phase 1**: Research and Discovery
-      - **Phase 2**: Business Specification and mandatory plan file creation at
-        `docs/plans/YYYY-MM-DD-{summary}.md`
-      - **Complexity Assessment**: Present E2E vs Simplified TDD recommendation
-      - Wait for user to choose a path
-      - **E2E Path**: Phase 3 (Gherkin) → Phase 4 (Integration) → Phase 5 (ATDD) → Phase 6 (Verify)
-      - **Simple TDD Path**: Path B (TDD implementation) → Phase 6 (Verify)
-    - Follow all phase transitions, checkpoints, and stop conditions defined in the skill
+    - **Phase 1**: Research and Discovery (planner agent)
+    - **Phase 2**: Plan & Specification with mandatory plan file creation at
+      `docs/plans/YYYY-MM-DD-{summary}.md` (planner agent)
+    - **Complexity Assessment**: Present E2E vs Simplified TDD recommendation
+    - Wait for user to choose a path
     - Do not continue to implementation until the plan file has been created and saved
+3. **Compact Context**
+  - Run `/compact` to compress the conversation
+  - The plan file at `docs/plans/` is the source of truth — implementation
+    reads it from disk, not from conversation history
+4. **Continue Spec-Driven Development Skill (Phases 3–4)**
+  - Re-read the skill file at `skills/spec-driven-development/SKILL.md`
+  - Re-read the plan file at `docs/plans/YYYY-MM-DD-{summary}.md`
+    - **E2E Path**: Phase 3 (Gherkin + TDD Implementation using tdd agent)
+    - **Simple TDD Path**: Path B (TDD implementation using tdd agent)
+    - **Phase 4**: Verify & Review (code-reviewer agent)
+  - Follow all phase transitions, checkpoints, and stop conditions defined in the skill
 
 ## When to Stop and Ask
 
@@ -55,7 +66,7 @@ Stop immediately and ask the user when:
 - Ambiguities resolved via clarifying questions
 - Project structure understood
 
-### After Phase 2
+### After Phase 2 (before compact)
 
 - User stories written (As a / I want / So that)
 - Acceptance criteria defined (Given / When / Then)
@@ -64,15 +75,21 @@ Stop immediately and ask the user when:
 - Complexity assessment presented
 - User confirmed path (E2E or Simplified TDD)
 
+### After Compact
+
+- `/compact` has been run
+- Plan file path is known and file exists on disk
+- Skill file will be re-read for implementation phases
+
 ### After Phase 3 (E2E Path Only)
 
 - Gherkin feature file presented and confirmed by user
-- Feature file saved to E2E test project
+- Feature file saved to test project
+- TDD implementation complete (RED → GREEN → REFACTOR for each component)
 
-### After Implementation
+### After Phase 4
 
-- All tests pass (unit, integration, E2E as applicable)
+- All tests pass (unit, integration, BDD as applicable)
 - Build succeeds with no linter errors
 - Plan file status updated to "Complete"
 - Code review completed (if requested)
-- Documentation updated (if needed)
