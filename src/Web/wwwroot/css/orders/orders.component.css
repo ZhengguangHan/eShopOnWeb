@@ -51,3 +51,38 @@
     padding-bottom: 30px; }
   .esh-orders-detail-title {
     font-size: 25px; }
+  .esh-orders-detail-image {
+    max-width: 100%;
+    max-height: 96px;
+    width: auto;
+    height: auto; }
+
+@media print {
+  .esh-header,
+  .esh-catalog-filter,
+  .esh-basket-status,
+  .esh-identity,
+  nav,
+  footer,
+  .esh-app-footer {
+    display: none !important; }
+  body,
+  .esh-orders,
+  .esh-orders-detail {
+    background: #fff !important;
+    color: #000 !important;
+    box-shadow: none !important; }
+  .esh-orders-detail {
+    overflow-x: visible; }
+  .esh-orders-detail-items {
+    page-break-inside: avoid;
+    break-inside: avoid; }
+  .esh-orders-detail-image {
+    max-width: 120px;
+    height: auto;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact; }
+  .esh-orders-detail-title {
+    font-size: 14pt; }
+  .esh-orders-detail-item {
+    font-size: 11pt; } }
