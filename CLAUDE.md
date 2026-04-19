@@ -27,11 +27,10 @@ src/
   eShopWeb.AppHost/               Aspire orchestration host
   eShopWeb.AspireServiceDefaults/
 tests/
-  UnitTests/                      xUnit + NSubstitute, per-scenario folder layout
-  IntegrationTests/               Repository-level integration tests
-  FunctionalTests/                End-to-end Web + PublicApi via WebApplicationFactory
-  PublicApiIntegrationTests/
-  PublicApiReqnrollTests/         Gherkin `.feature` files + step definitions
+  UnitTests/          xUnit v3 + NSubstitute, per-scenario folder layout (ApplicationCore, Web, Builders, MediatorHandlers)
+  IntegrationTests/   Repository-level tests (EF Core)
+  WebTests/           Reqnroll + MSTest BDD for Razor/MVC storefront (e.g., Basket.feature) via WebApplicationFactory
+  PublicApiTests/     Reqnroll + MSTest BDD for PublicApi (Authentication, CatalogItems, RoleManagement, RoleMembership, UserManagement)
 ```
 
 ## Project Conventions
@@ -55,7 +54,7 @@ tests/
 ### Testing Strategy
 - Unit tests use NSubstitute (`Substitute.For<IRepository<Basket>>()`) with Arrange-Act-Assert
 - One test class per scenario, folder-per-SUT layout (e.g., `BasketServiceTests/AddItemToBasket.cs`)
-- BDD Reqnroll features for PublicApi (Authentication, CatalogItems, Role/UserManagement)
+- BDD Reqnroll + MSTest features for both storefront (`WebTests`) and PublicApi (`PublicApiTests`); Gherkin `.feature` files with step definitions, hooks, and support contexts
 - Coverage via `coverlet.collector` + `CodeCoverage.runsettings`
 - CI runs `dotnet test` with XPlat Code Coverage on every push/PR
 
