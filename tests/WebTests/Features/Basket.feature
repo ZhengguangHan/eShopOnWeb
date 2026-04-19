@@ -81,3 +81,12 @@ Feature: Basket Web Pages
     When the shopper updates the first item quantity to "0"
     Then the basket page should show ".NET Black &amp; White Mug"
     And the basket page should not show "Prism White T-Shirt"
+
+  Scenario: Clearing the cart removes all items
+    Given the shopper has loaded the home page
+    And the shopper added catalog item "2" named "shirt" to the basket
+    And the shopper added catalog item "3" named "shirt" to the basket
+    When the shopper clears the cart
+    Then the basket page should show "Basket is empty"
+    And the basket page should not show ".NET Black &amp; White Mug"
+    And the basket page should not show "Prism White T-Shirt"

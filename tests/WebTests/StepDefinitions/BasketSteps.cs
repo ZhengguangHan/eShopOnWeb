@@ -30,6 +30,18 @@ public class BasketSteps(WebContext context)
         context.LastBody = await context.LastResponse.Content.ReadAsStringAsync();
     }
 
+    [When("the shopper clears the cart")]
+    public async Task ClearTheCart()
+    {
+        var token = WebPageHelpers.GetRequestVerificationToken(context.LastBody);
+        var content = new FormUrlEncodedContent(new[]
+        {
+            new KeyValuePair<string, string>(WebPageHelpers.TokenTag, token)
+        });
+        context.LastResponse = await context.Client.PostAsync("/basket/empty", content);
+        context.LastBody = await context.LastResponse.Content.ReadAsStringAsync();
+    }
+
     [When("the shopper updates the first item quantity to {string}")]
     public async Task UpdateFirstItemQuantity(string quantity)
     {

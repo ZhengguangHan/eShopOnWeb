@@ -65,6 +65,14 @@ public class IndexModel : PageModel
         BasketModel = await _basketViewModelService.Map(basket);
     }
 
+    public async Task OnPostEmpty()
+    {
+        var userName = GetOrSetBasketCookieAndUserName();
+        var basketView = await _basketViewModelService.GetOrCreateBasketForUser(userName);
+        await _basketService.EmptyBasketAsync(basketView.Id);
+        BasketModel = await _basketViewModelService.GetOrCreateBasketForUser(userName);
+    }
+
     private string GetOrSetBasketCookieAndUserName()
     {
         Guard.Against.Null(Request.HttpContext.User.Identity, nameof(Request.HttpContext.User.Identity));
