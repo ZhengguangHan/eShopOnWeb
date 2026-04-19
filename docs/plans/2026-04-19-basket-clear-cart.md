@@ -7,7 +7,29 @@
 **Architecture:** Extend the `Basket` aggregate with a `ClearItems()` method, add `IBasketService.EmptyBasketAsync(int basketId)` implemented against the existing repository + specification, and expose it through a new `OnPostEmpty` handler on the basket Razor Page. The page renders a small separate `<form>` with a client-side `confirm(...)` prompt, shown only when the basket has items.
 **Tech Stack:** C# / .NET 10, ASP.NET Core Razor Pages, Ardalis.Specification, Ardalis.Result, xUnit v3 + NSubstitute, Reqnroll + MSTest (BDD).
 **Complexity Path:** `E2E path` — user-facing UI with multi-layer changes (domain → service → page → BDD), confirmed by research Q&A.
-**Status:** Draft
+**Status:** Complete
+
+## Execution Log
+
+### Batch 1 — Phases 1–2 (complete, 2026-04-19)
+- **Task 1** ✅ `Basket.ClearItems()` — `BasketClearItems` tests (2/2 pass). Commit `26629c4`.
+  - Deviation: test placed under `tests/UnitTests/ApplicationCore/Entities/BasketTests/BasketClearItems.cs` (matching existing `BasketRemoveEmptyItems.cs` convention) instead of plan's `BasketAggregate/BasketClearItemsTests.cs`. Same namespace style, same behavioral coverage.
+- **Task 2** ✅ `IBasketService.EmptyBasketAsync` + service impl — `EmptyBasket` tests (2/2 pass). Commit `da5f29f`.
+- **Task 3** ✅ `ReturnsNotFoundWhenBasketMissing` — passes without additional prod code (Task 2 guard already returns `NotFound`). Commit `872dba1`.
+  - Deviation: plan suggested "skip COMMIT" when covered-by-Task-2; committed as test-only per plan's alternative message (`test(basket): cover NotFound path for EmptyBasketAsync`) so the regression guard is captured in history rather than left uncommitted.
+- Verification: `dotnet test tests/UnitTests/UnitTests.csproj` → 48/48 pass post-Task-2; 49/49 pass post-Task-3.
+
+### Batch 2 — Phases 3–5 (complete, 2026-04-19)
+- **Task 4** ✅ `IndexModel.OnPostEmpty` + BDD "Clearing the cart removes all items" — Reqnroll generates `BasketWebPagesFeature` class; filter updated to `FullyQualifiedName~BasketWebPagesFeature` (plan's `BasketFeature` was a near-miss). `ClearingTheCartRemovesAllItems` scenario pass; refactor reused `userName` local. Commit `23bd150`.
+- **Task 5** ✅ Clear Cart button + JS confirm — separate `<form asp-page-handler="Empty">` inside the `@if (Items.Any())` block. "Clear Cart button appears when the basket has items" + "Clear Cart button is not shown for an empty basket" both pass. Commit `cab58b0`.
+- **Task 6** ✅ Full regression — `dotnet build eShopOnWeb.sln` 0 errors / 157 warnings (all pre-existing vuln/style warnings; my changes introduced none new). `dotnet test eShopOnWeb.sln` → UnitTests 49/49, IntegrationTests 3/3, WebTests 28/28, PublicApiTests 95/95 — all pass.
+
+## Deviations Summary
+1. Unit test file path/name: `Entities/BasketTests/BasketClearItems.cs` (matches existing sibling `BasketRemoveEmptyItems.cs`) rather than the plan's `Entities/BasketAggregate/BasketClearItemsTests.cs`.
+2. Task 3 test was committed (regression guard) instead of skipped — used the plan's alternative commit message.
+3. BDD test filter uses `BasketWebPagesFeature` (Reqnroll's generated class name) rather than the plan's `BasketFeature`.
+4. **Layout fix (post-review, commit `d5a86ee`):** the plan's "separate `<form>`" mitigation (Task 5 Risks) caused the Clear Cart button to render on a new row (each `<form>` is block-level). Merged the Clear Cart button into the existing Update/Checkout form using `asp-page-handler="Empty"` on the button (which emits `formaction` pointing at `/Basket/Empty`) and moved the `confirm` prompt to the button's `onclick` so only Clear Cart is gated, not Update. The plan's stated risk — "posted `Items[]` collide with the Empty handler" — does not apply because `OnPostEmpty()` has no bound parameters; unbound form fields are harmlessly ignored. All 16 Basket BDD scenarios still pass; the `return confirm(` substring remains in the rendered HTML via the button's `onclick` attribute.
+
 
 ---
 
