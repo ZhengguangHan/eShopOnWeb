@@ -76,11 +76,40 @@ public class BasketSteps(WebContext context)
         context.LastBody = await context.LastResponse.Content.ReadAsStringAsync();
     }
 
+    [When("the shopper posts the first item to checkout with quantity {string}")]
+    public async Task PostCheckoutWithFirstItem(string quantity)
+    {
+        var token = WebPageHelpers.GetRequestVerificationToken(context.LastBody);
+        var itemId = WebPageHelpers.GetFirstItemId(context.LastBody);
+        var content = new FormUrlEncodedContent(new[]
+        {
+            new KeyValuePair<string, string>("Items[0].Id", itemId),
+            new KeyValuePair<string, string>("Items[0].Quantity", quantity),
+            new KeyValuePair<string, string>(WebPageHelpers.TokenTag, token)
+        });
+        context.LastResponse = await context.Client.PostAsync("/Basket/Checkout", content);
+        context.LastBody = await context.LastResponse.Content.ReadAsStringAsync();
+    }
+
+    [When("the shopper visits {string}")]
+    public async Task VisitUrl(string url)
+    {
+        context.LastResponse = await context.Client.GetAsync(url);
+        context.LastBody = await context.LastResponse.Content.ReadAsStringAsync();
+    }
+
     [Then("the basket page should show {string}")]
     public void ThenBodyContains(string expected)
     {
         Assert.IsTrue(context.LastBody.Contains(expected),
             $"Expected response body to contain \"{expected}\". Actual length: {context.LastBody.Length}");
+    }
+
+    [Then("the basket page should not show {string}")]
+    public void ThenBodyDoesNotContain(string unexpected)
+    {
+        Assert.IsFalse(context.LastBody.Contains(unexpected),
+            $"Expected response body NOT to contain \"{unexpected}\".");
     }
 
     [Then("the basket should show quantity {string} for the first item")]
@@ -98,5 +127,13 @@ public class BasketSteps(WebContext context)
         var url = context.LastResponse?.RequestMessage?.RequestUri?.ToString() ?? string.Empty;
         Assert.IsTrue(url.Contains(fragment, StringComparison.OrdinalIgnoreCase),
             $"Expected final URL to contain \"{fragment}\". Actual: {url}");
+    }
+
+    [Then("the last request URL should end with {string}")]
+    public void ThenLastUrlEndsWith(string suffix)
+    {
+        var url = context.LastResponse?.RequestMessage?.RequestUri?.AbsolutePath ?? string.Empty;
+        Assert.IsTrue(url.Equals(suffix, StringComparison.OrdinalIgnoreCase),
+            $"Expected final URL path to equal \"{suffix}\". Actual: {url}");
     }
 }
